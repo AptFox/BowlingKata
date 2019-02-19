@@ -1,0 +1,9 @@
+# ignore eclipse settings
+.settings/
+*.classpath
+*.project
+*.prefs
+
+# ignore build files
+bin/
+*.class
