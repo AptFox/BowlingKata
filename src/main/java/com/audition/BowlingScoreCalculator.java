@@ -64,17 +64,32 @@ public class BowlingScoreCalculator {
 		return scoreForCurrentFrame+ScoreGame(input.substring(subStringIndex), frameNum);
 	}
 	
+	/**
+	 * Takes in the character values for the previous two throws and determines a score for the third throw. 
+	 * if throwOne/throwTwo is a strike/spare then the returned value will be '-'.
+	 * 
+	 * @param throwOne  a character representing the first throw
+	 * @param throwTwo  a character representing the second throw
+	 * @param input     a string containing the character value you'd like to assign to the third throw
+	 * @param index     an int representing the position in the input string you'd like to assign to to the third throw 
+	 * @return          the character at the supplied index in the input string
+	 */
 	private Character calculateValueOfThirdThrow(Character throwOne, Character throwTwo, String input, int index) {
-		//throwThree only needs a value if throwOne/throwTwo is a strike/spare
-		Character value;
-		if (throwOne == STRIKE || throwTwo == SPARE) {
-			value = getThrowFromInput(input, 2);
-		}else {
-			value = MISS;
+		if (throwOne != STRIKE && throwTwo != SPARE) {
+			index = -1;
 		}
-		return value;
+		return getThrowFromInput(input, index);
 	}
 	
+	/**
+	 * Takes a string representing throws in a bowling game and the index of the desired throw.
+	 * 
+	 * Returns the character at the specified index in the supplied string. 
+	 * 
+	 * @param str    a string you'd like to return a bowling throw from. 
+	 * @param index  the position of the character you'd like to find in the string 
+	 * @return       the character at the specified index in the supplied string. 
+	 */
 	private Character getThrowFromInput(String str, int index) {
 		Character returnChar;
 		try {
@@ -85,6 +100,13 @@ public class BowlingScoreCalculator {
 		return returnChar;
 	}
 	
+	/**
+	 * Takes all throws associated with a frame in as chars 
+	 * and returns the combined score of all supplied throws.
+	 * 
+	 * @param chars  all throws associated with a frame in as chars
+	 * @return       an int representing the combined score of all supplied throws
+	 */
 	private int calculateFrameScore(Character...chars) {
 		int score = 0;
 		Integer lastThrowsNumber = null;
@@ -97,6 +119,16 @@ public class BowlingScoreCalculator {
 		return score;
 	}
 	
+	/**
+	 * Takes in a character representing a throw in a bowling game
+	 * and the value of the previous throw. if the current throw is
+	 * a spare then the score for the previous throw (when supplied) 
+	 * determines the score for the current throw.
+	 * 
+	 * @param ch                  a character to convert to a score
+	 * @param previousThrowScore  an integer representing the previous score
+	 * @return                    an int representing the score for the throw. 
+	 */
 	private int convertCharacterToScore(Character ch, Integer previousThrowScore) {
 		int score = 10;
 		if(Character.isDigit(ch)) {
