@@ -65,21 +65,26 @@ public class BowlingScoreCalculator {
 	
 	private int getScoreOfNextThrows(Character...chars) {
 		int score = 0;
-		boolean lastThrowWasANumber = false;
-		int lastThrowsNumber = 0;
+		Integer lastThrowsNumber = null;
 		for(Character ch : chars) {
 			if(Character.isDigit(ch)) {
-				lastThrowWasANumber = true;
 				lastThrowsNumber = Character.getNumericValue(ch);
-				score += lastThrowsNumber;
 			}
-			else {
-				int scoreForThisThrow = scoreMap.get(ch); 
-				if(lastThrowWasANumber && ch == SPARE) {
-					scoreForThisThrow = 10 - lastThrowsNumber;
-				}
-				score += scoreForThisThrow;
-			}
+			score += convertCharacterToScore(ch, lastThrowsNumber);
+		}
+		return score;
+	}
+	
+	private int convertCharacterToScore(Character ch, Integer previousThrowScore) {
+		int score;
+		if(Character.isDigit(ch)) {
+			score = Character.getNumericValue(ch);
+		}
+		else if(previousThrowScore != null && ch == SPARE){
+			score = 10 - previousThrowScore;
+		}
+		else {
+			score = scoreMap.get(ch);
 		}
 		return score;
 	}
