@@ -26,9 +26,9 @@ public class BowlingScoreCalculator {
 		return ScoreGame(line.replaceAll("\\s", ""), null);
 	}
 	
-	public int ScoreGame(String line, Integer frame) {
-		frame = frame == null ? 1 : frame;
-		boolean onLastFrame = frame == 10;
+	public int ScoreGame(String line, Integer frameNum) {
+		frameNum = frameNum == null ? 1 : frameNum;
+		boolean onLastFrame = frameNum == 10;
 		boolean takeSubStringAtIndexOne = false;
 		int scoreForCurrentFrame;
 		Character throwOne = line.charAt(0);
@@ -49,9 +49,9 @@ public class BowlingScoreCalculator {
 		scoreForCurrentFrame = getScoreOfNextThrows(throwOne, throwTwo, throwThree);
 		if(onLastFrame) {return scoreForCurrentFrame;}
 		else {
-			frame+=1;
+			frameNum+=1;
 			int subStringIndex = takeSubStringAtIndexOne ? 1 : 2;
-			return scoreForCurrentFrame+ScoreGame(line.substring(subStringIndex), frame);
+			return scoreForCurrentFrame+ScoreGame(line.substring(subStringIndex), frameNum);
 		}
 	}
 
