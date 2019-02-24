@@ -1,7 +1,6 @@
 package main.java.com.audition;
 
 import static main.java.com.audition.Constants.*;
-
 import java.util.HashMap;
 import java.util.Map;
 

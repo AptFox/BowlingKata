@@ -1,5 +1,3 @@
-package main.java.com.audition;
-import static main.java.com.audition.Constants.*;
 /*
  * Prompt: 
  * 	Create a program, which, given a valid sequence of rolls for one line of American Ten-Pin Bowling, 
@@ -12,6 +10,9 @@ import static main.java.com.audition.Constants.*;
  *  We will not provide scores for intermediate frames.
  *  
  */
+
+package main.java.com.audition;
+import static main.java.com.audition.Constants.*;
 public class BowlingScoreCalculator {
 	/**
 	 * Takes an input string representing a game of bowling.
@@ -30,7 +31,6 @@ public class BowlingScoreCalculator {
 		return score;
 	}
 	
-	//TODO Bring base case to the top of the method for readability.
 	/**
 	 * Takes an input string representing a game of bowling 
 	 * and a starting frame. A score for the supplied frame
@@ -42,16 +42,15 @@ public class BowlingScoreCalculator {
 	 * @return          an integer representing the total score for the game.
 	 */
 	private int ScoreGame(String input, Integer frameNum) {
+		if(frameNum > 10) {
+			return 0;
+		}
 		int scoreForCurrentFrame;
 		Character throwOne = StringToCharacterConverter.findThrowFromInput(input, 0);
 		Character throwTwo = StringToCharacterConverter.findThrowFromInput(input, 1);
 		Character throwThree = StringToCharacterConverter.findThirdThrow(throwOne, throwTwo, input, 2); 
 		
 		scoreForCurrentFrame = FrameScorer.findFrameScore(throwOne, throwTwo, throwThree);
-		if(frameNum == 10) {
-			return scoreForCurrentFrame;
-		}
-
 		frameNum+=1;
 		String subString = determineSubString(throwOne, input);
 		return scoreForCurrentFrame + ScoreGame(subString, frameNum);
