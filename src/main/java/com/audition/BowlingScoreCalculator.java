@@ -8,10 +8,10 @@ import java.util.Map;
  * 
  * 
  * Here are some things that the program will not do:
-    We will not check for valid rolls.
-    We will not check for correct number of rolls and frames.
-    We will not provide scores for intermediate frames.
-
+ *  We will not check for valid rolls.
+ *  We will not check for correct number of rolls and frames.
+ *  We will not provide scores for intermediate frames.
+ *  
  */
 public class BowlingScoreCalculator {
 	
@@ -29,15 +29,35 @@ public class BowlingScoreCalculator {
     	}
     };
 	
+	/**
+	 * Takes an input string representing a game of bowling.
+	 * The frames in the string must be separated by spaces.
+	 * 'X' for strikes
+	 * '/' for spares
+	 * '-' for misses
+	 * digits for throws that aren't strikes, spares or misses. 
+	 * 
+	 * @param input  a string representing a game of bowling.
+	 * @return       an integer representing the total score for the game.
+	 */
 	public int ScoreGame(String input) {
 		String inputWithRemovedSpaces = input.replaceAll(SPACE, EMPTY_STRING);
-		int score = ScoreGame(inputWithRemovedSpaces, null);
+		int score = ScoreGame(inputWithRemovedSpaces, 1);
 		return score;
 	}
 	
 	//TODO Bring base case to the top of the method for readability.
-	public int ScoreGame(String input, Integer frameNum) {
-		frameNum = frameNum == null ? 1 : frameNum;
+	/**
+	 * Takes an input string representing a game of bowling 
+	 * and a starting frame. A score for the supplied frame
+	 * is generated and added to the score from recursive calls
+	 * to this same method.
+	 * 
+	 * @param input     a string representing a game of bowling.
+	 * @param frameNum  an integer representing your starting frame. 
+	 * @return          an integer representing the total score for the game.
+	 */
+	private int ScoreGame(String input, Integer frameNum) {
 		int scoreForCurrentFrame;
 		Character throwOne = getThrowFromInput(input, 0);
 		Character throwTwo = getThrowFromInput(input, 1);
