@@ -21,7 +21,7 @@ public class BowlingScoreCalculator {
 	private static final String SPACE = "\\s";
 	private static final String EMPTY_STRING = "";
 	
-    Map<Character, Integer> scoreMap = new HashMap<Character, Integer>(){
+    private static final Map<Character, Integer> scoreMap = new HashMap<Character, Integer>(){
     	{
     	put(STRIKE,10);
 	    put(SPARE,10);
@@ -59,11 +59,11 @@ public class BowlingScoreCalculator {
 	 */
 	private int ScoreGame(String input, Integer frameNum) {
 		int scoreForCurrentFrame;
-		Character throwOne = getThrowFromInput(input, 0);
-		Character throwTwo = getThrowFromInput(input, 1);
-		Character throwThree = calculateValueOfThirdThrow(throwOne, throwTwo, input, 2); 
+		Character throwOne = findThrowFromInput(input, 0);
+		Character throwTwo = findThrowFromInput(input, 1);
+		Character throwThree = findThirdThrow(throwOne, throwTwo, input, 2); 
 		
-		scoreForCurrentFrame = calculateFrameScore(throwOne, throwTwo, throwThree);
+		scoreForCurrentFrame = findFrameScore(throwOne, throwTwo, throwThree);
 		if(frameNum == 10) {
 			return scoreForCurrentFrame;
 		}
@@ -100,11 +100,11 @@ public class BowlingScoreCalculator {
 	 * @param index     an int representing the position in the input string you'd like to assign to to the third throw 
 	 * @return          the character at the supplied index in the input string
 	 */
-	private Character calculateValueOfThirdThrow(Character throwOne, Character throwTwo, String input, int index) {
+	private Character findThirdThrow(Character throwOne, Character throwTwo, String input, int index) {
 		if (throwOne != STRIKE && throwTwo != SPARE) {
 			index = -1;
 		}
-		return getThrowFromInput(input, index);
+		return findThrowFromInput(input, index);
 	}
 	
 	/**
@@ -115,7 +115,7 @@ public class BowlingScoreCalculator {
 	 * @param index  the position of the character you'd like to find in the string 
 	 * @return       the character at the specified index in the supplied string. 
 	 */
-	private Character getThrowFromInput(String str, int index) {
+	private Character findThrowFromInput(String str, int index) {
 		Character returnChar;
 		try {
 			returnChar = str.charAt(index);
@@ -132,7 +132,7 @@ public class BowlingScoreCalculator {
 	 * @param chars  all throws associated with a frame in as chars
 	 * @return       an int representing the combined score of all supplied throws
 	 */
-	private int calculateFrameScore(Character...chars) {
+	private int findFrameScore(Character...chars) {
 		int score = 0;
 		Integer lastThrowsNumber = null;
 		for(Character ch : chars) {
