@@ -1,5 +1,7 @@
 package main.java.com.audition;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 /*
  * Prompt: 
@@ -36,31 +38,46 @@ public class BowlingScoreCalculator {
 		Character throwThree = null;
 		if (throwOne == 'X' || throwTwo == '/') {
 			throwThree = line.charAt(2);
-			if(throwOne == 'X') { takeSubStringAtIndexOne = true; }
-			else {throwOne = null;}
+			if(throwOne == 'X') { 
+				takeSubStringAtIndexOne = true; 
+			}
+			else {
+				throwOne = null;
+			}
 		}
 		else {
 			if (throwOne == '-') {
 				throwOne = null;
 				takeSubStringAtIndexOne = true;
 			}
-			else if (throwTwo == '-') { throwTwo = null; }
+			else if (throwTwo == '-') { 
+				throwTwo = null; 
+			}
 		}
 		scoreForCurrentFrame = getScoreOfNextThrows(throwOne, throwTwo, throwThree);
-		if(onLastFrame) {return scoreForCurrentFrame;}
+		if(onLastFrame) {
+			return scoreForCurrentFrame;
+		}
 		else {
 			frameNum+=1;
 			int subStringIndex = takeSubStringAtIndexOne ? 1 : 2;
 			return scoreForCurrentFrame+ScoreGame(line.substring(subStringIndex), frameNum);
 		}
 	}
-
+	
+	//TODO: turn this into several methods
 	private int getScoreOfNextThrows(Character...chars) {
 		int score = 0;
 		for(Character ch : chars) {
-			if(ch == null) { score+=0; }
-			else if(Character.isDigit(ch)) {score += Character.getNumericValue(ch);}
-			else { score += scoreMap.get(ch);}
+			if(ch == null) { 
+				score+=0; 
+			}
+			else if(Character.isDigit(ch)) {
+				score += Character.getNumericValue(ch);
+			}
+			else { 
+				score += scoreMap.get(ch);
+			}
 		}
 		return score;
 	}
