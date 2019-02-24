@@ -1,7 +1,5 @@
 package main.java.com.audition;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 /*
  * Prompt: 
@@ -76,12 +74,12 @@ public class BowlingScoreCalculator {
 	}
 	
 	private int convertCharacterToScore(Character ch, Integer previousThrowScore) {
-		int score;
+		int score = 10;
 		if(Character.isDigit(ch)) {
 			score = Character.getNumericValue(ch);
 		}
 		else if(previousThrowScore != null && ch == SPARE){
-			score = 10 - previousThrowScore;
+			score -= previousThrowScore;
 		}
 		else {
 			score = scoreMap.get(ch);
