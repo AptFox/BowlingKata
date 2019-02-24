@@ -17,10 +17,15 @@ import java.util.Map;
  */
 public class BowlingScoreCalculator {
 	
+	private static final Character STRIKE = 'X';
+	private static final Character SPARE = '/';
+	private static final Character MISS = '-';
+	
     Map<Character, Integer> scoreMap = new HashMap<Character, Integer>(){
     	{
-    	put('X',10);
-	    put('/',10);
+    	put(STRIKE,10);
+	    put(SPARE,10);
+	    put(MISS,0);
     	}
     };
 	
@@ -35,48 +40,45 @@ public class BowlingScoreCalculator {
 		int scoreForCurrentFrame;
 		Character throwOne = line.charAt(0);
 		Character throwTwo = line.charAt(1);
-		Character throwThree = null;
-		if (throwOne == 'X' || throwTwo == '/') {
+		Character throwThree = MISS;
+		if (throwOne == STRIKE || throwTwo == SPARE) {
 			throwThree = line.charAt(2);
-			if(throwOne == 'X') { 
+			if(throwOne == STRIKE) { 
 				takeSubStringAtIndexOne = true; 
-			}
-			else {
-				throwOne = null;
 			}
 		}
 		else {
-			if (throwOne == '-') {
-				throwOne = null;
+			if (throwOne == MISS) {
 				takeSubStringAtIndexOne = true;
-			}
-			else if (throwTwo == '-') { 
-				throwTwo = null; 
 			}
 		}
 		scoreForCurrentFrame = getScoreOfNextThrows(throwOne, throwTwo, throwThree);
 		if(onLastFrame) {
 			return scoreForCurrentFrame;
 		}
-		else {
-			frameNum+=1;
-			int subStringIndex = takeSubStringAtIndexOne ? 1 : 2;
-			return scoreForCurrentFrame+ScoreGame(line.substring(subStringIndex), frameNum);
-		}
+
+		frameNum+=1;
+		int subStringIndex = takeSubStringAtIndexOne ? 1 : 2;
+		return scoreForCurrentFrame+ScoreGame(line.substring(subStringIndex), frameNum);
+		
 	}
 	
-	//TODO: turn this into several methods
 	private int getScoreOfNextThrows(Character...chars) {
 		int score = 0;
+		boolean lastThrowWasANumber = false;
+		int lastThrowsNumber = 0;
 		for(Character ch : chars) {
-			if(ch == null) { 
-				score+=0; 
+			if(Character.isDigit(ch)) {
+				lastThrowWasANumber = true;
+				lastThrowsNumber = Character.getNumericValue(ch);
+				score += lastThrowsNumber;
 			}
-			else if(Character.isDigit(ch)) {
-				score += Character.getNumericValue(ch);
-			}
-			else { 
-				score += scoreMap.get(ch);
+			else {
+				int scoreForThisThrow = scoreMap.get(ch); 
+				if(lastThrowWasANumber && ch == SPARE) {
+					scoreForThisThrow = 10 - lastThrowsNumber;
+				}
+				score += scoreForThisThrow;
 			}
 		}
 		return score;
