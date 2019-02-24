@@ -27,10 +27,13 @@ public class BowlingScoreCalculator {
     	}
     };
 	
-	public int ScoreGame(String line) {
-		return ScoreGame(line.replaceAll("\\s", ""), null);
+	public int ScoreGame(String input) {
+		String inputWithRemovedSpaces = input.replaceAll("\\s", "");
+		int score = ScoreGame(inputWithRemovedSpaces, null);
+		return score;
 	}
 	
+	//TODO Bring base case to the top of the method for readability.
 	public int ScoreGame(String line, Integer frameNum) {
 		frameNum = frameNum == null ? 1 : frameNum;
 		boolean onLastFrame = frameNum == 10;
@@ -58,7 +61,6 @@ public class BowlingScoreCalculator {
 		frameNum+=1;
 		int subStringIndex = takeSubStringAtIndexOne ? 1 : 2;
 		return scoreForCurrentFrame+ScoreGame(line.substring(subStringIndex), frameNum);
-		
 	}
 	
 	private int getScoreOfNextThrows(Character...chars) {
