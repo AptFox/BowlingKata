@@ -1,6 +1,5 @@
 package main.java.com.audition;
-import java.util.HashMap;
-import java.util.Map;
+import static main.java.com.audition.Constants.*;
 /*
  * Prompt: 
  * 	Create a program, which, given a valid sequence of rolls for one line of American Ten-Pin Bowling, 
@@ -14,21 +13,6 @@ import java.util.Map;
  *  
  */
 public class BowlingScoreCalculator {
-	
-	private static final Character STRIKE = 'X';
-	private static final Character SPARE = '/';
-	private static final Character MISS = '-';
-	private static final String SPACE = "\\s";
-	private static final String EMPTY_STRING = "";
-	
-    private static final Map<Character, Integer> scoreMap = new HashMap<Character, Integer>(){
-    	{
-    	put(STRIKE,10);
-	    put(SPARE,10);
-	    put(MISS,0);
-    	}
-    };
-	
 	/**
 	 * Takes an input string representing a game of bowling.
 	 * The frames in the string must be separated by spaces.
@@ -41,7 +25,7 @@ public class BowlingScoreCalculator {
 	 * @return       an integer representing the total score for the game.
 	 */
 	public int ScoreGame(String input) {
-		String inputWithRemovedSpaces = input.replaceAll(SPACE, EMPTY_STRING);
+		String inputWithRemovedSpaces = input.replaceAll(Constants.SPACE, Constants.EMPTY_STRING);
 		int score = ScoreGame(inputWithRemovedSpaces, 1);
 		return score;
 	}
@@ -59,11 +43,11 @@ public class BowlingScoreCalculator {
 	 */
 	private int ScoreGame(String input, Integer frameNum) {
 		int scoreForCurrentFrame;
-		Character throwOne = findThrowFromInput(input, 0);
-		Character throwTwo = findThrowFromInput(input, 1);
-		Character throwThree = findThirdThrow(throwOne, throwTwo, input, 2); 
+		Character throwOne = StringToCharacterConverter.findThrowFromInput(input, 0);
+		Character throwTwo = StringToCharacterConverter.findThrowFromInput(input, 1);
+		Character throwThree = StringToCharacterConverter.findThirdThrow(throwOne, throwTwo, input, 2); 
 		
-		scoreForCurrentFrame = findFrameScore(throwOne, throwTwo, throwThree);
+		scoreForCurrentFrame = FrameScorer.findFrameScore(throwOne, throwTwo, throwThree);
 		if(frameNum == 10) {
 			return scoreForCurrentFrame;
 		}
@@ -89,82 +73,6 @@ public class BowlingScoreCalculator {
 		}
 		return input.substring(substringIndex);
 	}
-	
-	/**
-	 * Takes the character values for the previous two throws and determines a score for the third throw. 
-	 * if throwOne/throwTwo is a strike/spare then the returned value will be '-'.
-	 * 
-	 * @param throwOne  a character representing the first throw
-	 * @param throwTwo  a character representing the second throw
-	 * @param input     a string containing the character value you'd like to assign to the third throw
-	 * @param index     an int representing the position in the input string you'd like to assign to to the third throw 
-	 * @return          the character at the supplied index in the input string
-	 */
-	private Character findThirdThrow(Character throwOne, Character throwTwo, String input, int index) {
-		if (throwOne != STRIKE && throwTwo != SPARE) {
-			index = -1;
-		}
-		return findThrowFromInput(input, index);
-	}
-	
-	/**
-	 * Takes a string representing throws in a bowling game and the index of the desired throw.
-	 * Returns the character at the specified index in the supplied string. 
-	 * 
-	 * @param str    a string you'd like to return a bowling throw from. 
-	 * @param index  the position of the character you'd like to find in the string 
-	 * @return       the character at the specified index in the supplied string. 
-	 */
-	private Character findThrowFromInput(String str, int index) {
-		Character returnChar;
-		try {
-			returnChar = str.charAt(index);
-		}catch(IndexOutOfBoundsException e) {
-			returnChar = MISS;
-		}
-		return returnChar;
-	}
-	
-	/**
-	 * Takes all throws associated with a frame in as chars 
-	 * and returns the combined score of all supplied throws.
-	 * 
-	 * @param chars  all throws associated with a frame in as chars
-	 * @return       an int representing the combined score of all supplied throws
-	 */
-	private int findFrameScore(Character...chars) {
-		int score = 0;
-		Integer lastThrowsNumber = null;
-		for(Character ch : chars) {
-			if(Character.isDigit(ch)) {
-				lastThrowsNumber = Character.getNumericValue(ch);
-			}
-			score += convertCharacterToScore(ch, lastThrowsNumber);
-		}
-		return score;
-	}
-	
-	/**
-	 * Takes in a character representing a throw in a bowling game
-	 * and the value of the previous throw. if the current throw is
-	 * a spare then the score for the previous throw (when supplied) 
-	 * determines the score for the current throw.
-	 * 
-	 * @param ch                  a character to convert to a score
-	 * @param previousThrowScore  an integer representing the previous score
-	 * @return                    an int representing the score for the throw. 
-	 */
-	private int convertCharacterToScore(Character ch, Integer previousThrowScore) {
-		int score = 10;
-		if(Character.isDigit(ch)) {
-			score = Character.getNumericValue(ch);
-		}
-		else if(previousThrowScore != null && ch == SPARE){
-			score -= previousThrowScore;
-		}
-		else {
-			score = scoreMap.get(ch);
-		}
-		return score;
-	}
+
+
 }
