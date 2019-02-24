@@ -62,26 +62,26 @@ public class BowlingScoreCalculator {
 		Character throwOne = getThrowFromInput(input, 0);
 		Character throwTwo = getThrowFromInput(input, 1);
 		Character throwThree = calculateValueOfThirdThrow(throwOne, throwTwo, input, 2); 
-		boolean takeSubStringAtIndexOne = false;
 		
-		if (throwOne == STRIKE || throwTwo == SPARE) {
-			if(throwOne == STRIKE) { 
-				takeSubStringAtIndexOne = true; 
-			}
-		}
-		else {
-			if (throwOne == MISS) {
-				takeSubStringAtIndexOne = true;
-			}
-		}
 		scoreForCurrentFrame = calculateFrameScore(throwOne, throwTwo, throwThree);
 		if(frameNum == 10) {
 			return scoreForCurrentFrame;
 		}
 
 		frameNum+=1;
-		int subStringIndex = takeSubStringAtIndexOne ? 1 : 2;
+		int subStringIndex = determinesubStringIndex(throwOne, throwTwo);
 		return scoreForCurrentFrame+ScoreGame(input.substring(subStringIndex), frameNum);
+	}
+	
+	private int determinesubStringIndex(Character throwOne, Character throwTwo) {
+		int substringIndex = 2;
+		if (throwOne == STRIKE ) {
+			substringIndex = 1; 
+		}
+		else if(throwOne == MISS){
+			substringIndex = 1;
+		}
+		return substringIndex;
 	}
 	
 	/**
