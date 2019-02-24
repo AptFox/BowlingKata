@@ -69,23 +69,29 @@ public class BowlingScoreCalculator {
 		}
 
 		frameNum+=1;
-		int subStringIndex = determinesubStringIndex(throwOne, throwTwo);
-		return scoreForCurrentFrame+ScoreGame(input.substring(subStringIndex), frameNum);
-	}
-	
-	private int determinesubStringIndex(Character throwOne, Character throwTwo) {
-		int substringIndex = 2;
-		if (throwOne == STRIKE ) {
-			substringIndex = 1; 
-		}
-		else if(throwOne == MISS){
-			substringIndex = 1;
-		}
-		return substringIndex;
+		String subString = determineSubString(throwOne, input);
+		return scoreForCurrentFrame + ScoreGame(subString, frameNum);
 	}
 	
 	/**
-	 * Takes in the character values for the previous two throws and determines a score for the third throw. 
+	 * Takes the character value of the first throw, a string
+	 * representing the frames in a game of bowling and returns 
+	 * a substring of frames still requiring scoring.
+	 * 
+	 * @param throwOne  character representing the first throw
+	 * @param input     a string representing frames in a game of bowling
+	 * @return          a substring of the supplied bowling game string
+	 */
+	private String determineSubString(Character throwOne, String input) {
+		int substringIndex = 2;
+		if (throwOne == STRIKE || throwOne == MISS) {
+			substringIndex = 1; 
+		}
+		return input.substring(substringIndex);
+	}
+	
+	/**
+	 * Takes the character values for the previous two throws and determines a score for the third throw. 
 	 * if throwOne/throwTwo is a strike/spare then the returned value will be '-'.
 	 * 
 	 * @param throwOne  a character representing the first throw
@@ -103,7 +109,6 @@ public class BowlingScoreCalculator {
 	
 	/**
 	 * Takes a string representing throws in a bowling game and the index of the desired throw.
-	 * 
 	 * Returns the character at the specified index in the supplied string. 
 	 * 
 	 * @param str    a string you'd like to return a bowling throw from. 
