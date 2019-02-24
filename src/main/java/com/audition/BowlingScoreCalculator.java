@@ -18,6 +18,8 @@ public class BowlingScoreCalculator {
 	private static final Character STRIKE = 'X';
 	private static final Character SPARE = '/';
 	private static final Character MISS = '-';
+	private static final String SPACE = "\\s";
+	private static final String EMPTY_STRING = "";
 	
     Map<Character, Integer> scoreMap = new HashMap<Character, Integer>(){
     	{
@@ -28,22 +30,21 @@ public class BowlingScoreCalculator {
     };
 	
 	public int ScoreGame(String input) {
-		String inputWithRemovedSpaces = input.replaceAll("\\s", "");
+		String inputWithRemovedSpaces = input.replaceAll(SPACE, EMPTY_STRING);
 		int score = ScoreGame(inputWithRemovedSpaces, null);
 		return score;
 	}
 	
 	//TODO Bring base case to the top of the method for readability.
-	public int ScoreGame(String line, Integer frameNum) {
+	public int ScoreGame(String input, Integer frameNum) {
 		frameNum = frameNum == null ? 1 : frameNum;
-		boolean onLastFrame = frameNum == 10;
-		boolean takeSubStringAtIndexOne = false;
 		int scoreForCurrentFrame;
-		Character throwOne = line.charAt(0);
-		Character throwTwo = line.charAt(1);
-		Character throwThree = MISS;
+		Character throwOne = getThrowFromInput(input, 0);
+		Character throwTwo = getThrowFromInput(input, 1);
+		Character throwThree = calculateValueOfThirdThrow(throwOne, throwTwo, input, 2); 
+		boolean takeSubStringAtIndexOne = false;
+		
 		if (throwOne == STRIKE || throwTwo == SPARE) {
-			throwThree = line.charAt(2);
 			if(throwOne == STRIKE) { 
 				takeSubStringAtIndexOne = true; 
 			}
@@ -53,17 +54,38 @@ public class BowlingScoreCalculator {
 				takeSubStringAtIndexOne = true;
 			}
 		}
-		scoreForCurrentFrame = getScoreOfNextThrows(throwOne, throwTwo, throwThree);
-		if(onLastFrame) {
+		scoreForCurrentFrame = calculateFrameScore(throwOne, throwTwo, throwThree);
+		if(frameNum == 10) {
 			return scoreForCurrentFrame;
 		}
 
 		frameNum+=1;
 		int subStringIndex = takeSubStringAtIndexOne ? 1 : 2;
-		return scoreForCurrentFrame+ScoreGame(line.substring(subStringIndex), frameNum);
+		return scoreForCurrentFrame+ScoreGame(input.substring(subStringIndex), frameNum);
 	}
 	
-	private int getScoreOfNextThrows(Character...chars) {
+	private Character calculateValueOfThirdThrow(Character throwOne, Character throwTwo, String input, int index) {
+		//throwThree only needs a value if throwOne/throwTwo is a strike/spare
+		Character value;
+		if (throwOne == STRIKE || throwTwo == SPARE) {
+			value = getThrowFromInput(input, 2);
+		}else {
+			value = MISS;
+		}
+		return value;
+	}
+	
+	private Character getThrowFromInput(String str, int index) {
+		Character returnChar;
+		try {
+			returnChar = str.charAt(index);
+		}catch(IndexOutOfBoundsException e) {
+			returnChar = MISS;
+		}
+		return returnChar;
+	}
+	
+	private int calculateFrameScore(Character...chars) {
 		int score = 0;
 		Integer lastThrowsNumber = null;
 		for(Character ch : chars) {

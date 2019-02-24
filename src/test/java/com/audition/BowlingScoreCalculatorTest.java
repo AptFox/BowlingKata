@@ -48,5 +48,5 @@ class BowlingScoreCalculatorTest {
 		int actualScore = bsc.ScoreGame(frameScores);
 		assertEquals(expectedScore, actualScore);
 	}
-
+	
 }
